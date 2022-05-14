@@ -46,7 +46,29 @@ body {
   align-items: center;
 }
 
+.to-do-list__input {
+  border-radius: 4px;
+  background-color: #f7f5ef;
+  border: none;
+}
+
+.to-do-list__submit {
+  background-color: #ebb002;
+  border: none;
+  color: #201d0f;
+  padding: 0.5rem 1.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.to-do-list__submit:hover,
+.to-do-list__submit:active {
+  background-color: #ebc002;
+}
+
 .form__row {
   display: flex;
   gap: 1rem;
-}/*# sourceMappingURL=App.css.map */
+}
+
+/*# sourceMappingURL=App.css.map */

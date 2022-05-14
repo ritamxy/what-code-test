@@ -1,14 +1,53 @@
-import React, { useState } from 'react';
-import './App.css';
+import React, { useState, useEffect } from "react";
+import NewTodo from "./components/NewTodo";
+import Todos from "./components/Todos";
+import "./App.css";
+import Todo from "./models/todo";
 
 function App() {
-  const [formValue, setFormValue] = useState({
-    input: '',
-  });
+  const [todos, setTodos] = useState<Todo[]>([]);
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
-  const submitForm = (event: any) => {
-    event.preventDefault();
+  const addTodoHandler = async (title: string, content: string) => {
+    await fetch("http://localhost:2022/api/v1/posts", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        title: title,
+        content: content,
+      }),
+    });
+    setIsSubmitted(true);
   };
+
+  const removeTodoHandler = async (id: string) => {
+    await fetch(`http://localhost:2022/api/v1/posts/${id}`, {
+      method: "DELETE",
+    });
+    setIsSubmitted(true);
+  };
+
+  useEffect(() => {
+    const fetchExistedTodos = async () => {
+      const response = await fetch("http://localhost:2022/api/v1/posts");
+      const responseData = await response.json();
+      const loadedTodos = [];
+
+      for (const item of responseData) {
+        const { id, title, content, createdAt, updatedAt } = item;
+        const todo = new Todo(id, title, content, createdAt, updatedAt);
+        loadedTodos.push(todo);
+      }
+
+      setTodos(loadedTodos);
+      setIsSubmitted(false);
+    };
+
+    fetchExistedTodos();
+  }, [isSubmitted]);
 
   return (
     <div className="app">
@@ -23,31 +62,9 @@ function App() {
           😊
         </p>
       </header>
-
-      <section className="to-do-list">
-        <h3 className="text__heading3">To Do List</h3>
-        <form className="to-do-list__form" onSubmit={submitForm}>
-          <div className="form__row">
-            <label htmlFor="input" className="text__normal">
-              New To-Do Item:
-            </label>
-            <input
-              type="text"
-              id="input"
-              className="to-do-list__input"
-              value={formValue.input}
-              onChange={({ target: { value } }) =>
-                setFormValue((preValue) => ({ ...preValue, input: value }))
-              }
-            />
-            <button type="submit" className="to-do-list__submit">
-              Add
-            </button>
-          </div>
-        </form>
-
-        {/* You should render your todo list down here */}
-      </section>
+      <NewTodo onAddTodo={addTodoHandler} />
+      {/* You should render your todo list down here */}
+      <Todos items={todos} onRemoveTodo={removeTodoHandler} />
     </div>
   );
 }

@@ -1,0 +1,28 @@
+.items {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  gap: 1rem;
+  justify-content: space-around;
+}
+
+.items button {
+  background-color: #282c34;
+  border: solid 1px #f7f5ef;
+  color: #f7f5ef;
+  margin: 1rem 0;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.item {
+  margin: 1rem 0;
+  padding: 1rem;
+  width: 32rem;
+  background-color: #f7f5ef;
+}
+
+.items button:hover {
+  background-color: #ebc002;
+}
